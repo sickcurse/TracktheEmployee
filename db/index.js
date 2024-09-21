@@ -79,4 +79,14 @@ class Database {
     return this.executeQuery('SELECT id, name FROM department;');
   }
 
+  getDepartmentBudgets() {
+    return this.executeQuery(
+      `SELECT d.id, d.name, SUM(r.salary) AS total_budget 
+      FROM employee e 
+      LEFT JOIN role r ON e.role_id = r.id 
+      LEFT JOIN department d ON r.department_id = d.id 
+      GROUP BY d.id, d.name;`
+    );
+  }
+
 
