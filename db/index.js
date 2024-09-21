@@ -30,3 +30,11 @@ class Database {
       [employeeId]
     );
   }
+
+  addEmployee(employeeData) {
+    const { first_name, last_name, role_id, manager_id } = employeeData;
+    return this.executeQuery(
+      'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)',
+      [first_name, last_name, role_id, manager_id]
+    );
+  }
