@@ -49,3 +49,10 @@ class Database {
       [newRoleId, employeeId]
     );
   }
+
+  updateManager(employeeId, newManagerId) {
+    return this.executeQuery(
+      'UPDATE employee SET manager_id = $1 WHERE id = $2',
+      [newManagerId, employeeId]
+    );
+  }
