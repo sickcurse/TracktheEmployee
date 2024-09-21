@@ -56,3 +56,17 @@ class Database {
       [newManagerId, employeeId]
     );
   }
+
+  getAllRoles() {
+    return this.executeQuery(
+      'SELECT r.id, r.title, d.name AS department, r.salary FROM role r LEFT JOIN department d ON r.department_id = d.id;'
+    );
+  }
+
+  addRole(roleData) {
+    const { title, salary, department_id } = roleData;
+    return this.executeQuery(
+      'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)',
+      [title, salary, department_id]
+    );
+  }
