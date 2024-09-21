@@ -70,3 +70,13 @@ class Database {
       [title, salary, department_id]
     );
   }
+
+  deleteRole(roleId) {
+    return this.executeQuery('DELETE FROM role WHERE id = $1', [roleId]);
+  }
+
+  getAllDepartments() {
+    return this.executeQuery('SELECT id, name FROM department;');
+  }
+
+
