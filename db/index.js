@@ -89,4 +89,14 @@ class Database {
     );
   }
 
+  addDepartment(departmentData) {
+    return this.executeQuery('INSERT INTO department (name) VALUES ($1)', [
+      departmentData.name,
+    ]);
+  }
 
+deleteDepartment(departmentId) {
+    return this.executeQuery('DELETE FROM department WHERE id = $1', [
+      departmentId,
+    ]);
+  }
