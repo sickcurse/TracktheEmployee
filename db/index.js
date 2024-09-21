@@ -23,3 +23,10 @@ class Database {
       LEFT JOIN employee m ON m.id = e.manager_id;`
     );
   }
+
+  getManagersExcluding(employeeId) {
+    return this.executeQuery(
+      'SELECT id, first_name, last_name FROM employee WHERE id != $1',
+      [employeeId]
+    );
+  }
