@@ -42,3 +42,10 @@ class Database {
   deleteEmployee(employeeId) {
     return this.executeQuery('DELETE FROM employee WHERE id = $1', [employeeId]);
   }
+
+  updateRole(employeeId, newRoleId) {
+    return this.executeQuery(
+      'UPDATE employee SET role_id = $1 WHERE id = $2',
+      [newRoleId, employeeId]
+    );
+  }
