@@ -100,3 +100,28 @@ deleteDepartment(departmentId) {
       departmentId,
     ]);
   }
+
+  getEmployeesByDepartment(departmentId) {
+    return this.executeQuery(
+      `SELECT e.id, e.first_name, e.last_name, r.title 
+      FROM employee e 
+      LEFT JOIN role r ON e.role_id = r.id 
+      LEFT JOIN department d ON r.department_id = d.id 
+      WHERE d.id = $1;`,
+      [departmentId]
+    );
+  }
+
+
+  getEmployeesByManager(managerId) {
+    return this.executeQuery(
+      `SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title 
+      FROM employee e 
+      LEFT JOIN role r ON r.id = e.role_id 
+      LEFT JOIN department d ON d.id = r.department_id 
+      WHERE e.manager_id = $1;`,
+      [managerId]
+    );
+  }
+}
+module.exports = new Database();
