@@ -38,3 +38,7 @@ class Database {
       [first_name, last_name, role_id, manager_id]
     );
   }
+
+  deleteEmployee(employeeId) {
+    return this.executeQuery('DELETE FROM employee WHERE id = $1', [employeeId]);
+  }
