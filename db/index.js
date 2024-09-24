@@ -1,127 +1,34 @@
 const pool = require('./connection');
 
-class Database {
-  constructor() {}
-
-  async executeQuery(sql, params = []) {
+class DB {
+  async query(sql, args = []) {
     const client = await pool.connect();
     try {
-      const data = await client.query(sql, params);
-      return data;
+      const result = await client.query(sql, args);
+      return result;
     } finally {
       client.release();
     }
   }
 
-  getAllEmployees() {
-    return this.executeQuery(
-      `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, 
-      CONCAT(m.first_name, ' ', m.last_name) AS manager 
-      FROM employee e 
-      LEFT JOIN role r ON e.role_id = r.id 
-      LEFT JOIN department d ON r.department_id = d.id 
-      LEFT JOIN employee m ON m.id = e.manager_id;`
-    );
+  // Define all the methods you're trying to call in your app, like:
+  findAllEmployees() {
+    return this.query('SELECT * FROM employee');
   }
 
-  getManagersExcluding(employeeId) {
-    return this.executeQuery(
-      'SELECT id, first_name, last_name FROM employee WHERE id != $1',
-      [employeeId]
-    );
+  findAllRoles() {
+    return this.query('SELECT * FROM role');
   }
 
-  addEmployee(employeeData) {
-    const { first_name, last_name, role_id, manager_id } = employeeData;
-    return this.executeQuery(
-      'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)',
-      [first_name, last_name, role_id, manager_id]
-    );
+  findAllDepartments() {
+    return this.query('SELECT * FROM department');
   }
 
-  deleteEmployee(employeeId) {
-    return this.executeQuery('DELETE FROM employee WHERE id = $1', [employeeId]);
+  createDepartment(department) {
+    return this.query('INSERT INTO department (name) VALUES ($1)', [department.name]);
   }
 
-  updateRole(employeeId, newRoleId) {
-    return this.executeQuery(
-      'UPDATE employee SET role_id = $1 WHERE id = $2',
-      [newRoleId, employeeId]
-    );
-  }
-
-  updateManager(employeeId, newManagerId) {
-    return this.executeQuery(
-      'UPDATE employee SET manager_id = $1 WHERE id = $2',
-      [newManagerId, employeeId]
-    );
-  }
-
-  getAllRoles() {
-    return this.executeQuery(
-      'SELECT r.id, r.title, d.name AS department, r.salary FROM role r LEFT JOIN department d ON r.department_id = d.id;'
-    );
-  }
-
-  addRole(roleData) {
-    const { title, salary, department_id } = roleData;
-    return this.executeQuery(
-      'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)',
-      [title, salary, department_id]
-    );
-  }
-
-  deleteRole(roleId) {
-    return this.executeQuery('DELETE FROM role WHERE id = $1', [roleId]);
-  }
-
-  getAllDepartments() {
-    return this.executeQuery('SELECT id, name FROM department;');
-  }
-
-  getDepartmentBudgets() {
-    return this.executeQuery(
-      `SELECT d.id, d.name, SUM(r.salary) AS total_budget 
-      FROM employee e 
-      LEFT JOIN role r ON e.role_id = r.id 
-      LEFT JOIN department d ON r.department_id = d.id 
-      GROUP BY d.id, d.name;`
-    );
-  }
-
-  addDepartment(departmentData) {
-    return this.executeQuery('INSERT INTO department (name) VALUES ($1)', [
-      departmentData.name,
-    ]);
-  }
-
-deleteDepartment(departmentId) {
-    return this.executeQuery('DELETE FROM department WHERE id = $1', [
-      departmentId,
-    ]);
-  }
-
-  getEmployeesByDepartment(departmentId) {
-    return this.executeQuery(
-      `SELECT e.id, e.first_name, e.last_name, r.title 
-      FROM employee e 
-      LEFT JOIN role r ON e.role_id = r.id 
-      LEFT JOIN department d ON r.department_id = d.id 
-      WHERE d.id = $1;`,
-      [departmentId]
-    );
-  }
-
-
-  getEmployeesByManager(managerId) {
-    return this.executeQuery(
-      `SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title 
-      FROM employee e 
-      LEFT JOIN role r ON r.id = e.role_id 
-      LEFT JOIN department d ON d.id = r.department_id 
-      WHERE e.manager_id = $1;`,
-      [managerId]
-    );
-  }
+  // Add other necessary methods here...
 }
-module.exports = new Database();
+
+module.exports = new DB();

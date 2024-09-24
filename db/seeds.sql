@@ -1,14 +1,22 @@
-\c employees
+-- Clear existing data
+DELETE FROM employee;
+DELETE FROM role;
+DELETE FROM department;
 
--- Inserting departments
-INSERT INTO department (name)
+-- Reset sequences to ensure IDs start from 1
+ALTER SEQUENCE department_id_seq RESTART WITH 1;
+ALTER SEQUENCE role_id_seq RESTART WITH 1;
+ALTER SEQUENCE employee_id_seq RESTART WITH 1;
+
+-- Inserting departments with specific IDs
+INSERT INTO department (id, name)
 VALUES 
-    ('Human Resources'),
-    ('Marketing'),
-    ('Operations'),
-    ('IT Support');
+    (1, 'Human Resources'),
+    (2, 'Marketing'),
+    (3, 'Operations'),
+    (4, 'IT Support');
 
--- Inserting roles
+-- Inserting roles with correct department_id
 INSERT INTO role (title, salary, department_id)
 VALUES 
     ('HR Manager', 95000, 1),
